@@ -5,7 +5,6 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 #include "Backup.h"
 #include "File.h"
@@ -20,7 +19,8 @@ public:
     // Register a live file with the system (map cannot be populated otherwise).
     void addFile(std::unique_ptr<File> file);
 
-    std::vector<std::time_t> listBackups(const std::string& fileName) const;
+    // Prints the file name and every backup timestamp it has.
+    void listBackups(const std::string& fileName) const;
     void restore(const std::string& fileName, std::time_t timestamp);
     void createBackup(const std::string& fileName);
 };
