@@ -3,6 +3,7 @@
 *.out
 a.out
 main
+backup-system
 build/
 
 # Editor/OS
