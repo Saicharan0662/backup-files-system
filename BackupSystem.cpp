@@ -1,6 +1,7 @@
 #include "BackupSystem.h"
 
 #include <iostream>
+#include <utility>
 
 File* BackupSystem::addFile(std::unique_ptr<File> file) {
     if (!file) {
@@ -35,9 +36,15 @@ void BackupSystem::createBackup(const std::string& fileName) {
     const std::string& content = fileIt->second->getContent();
 
     // `backups[fileName]` creates the per-file history entry if the key is new,
-    // otherwise returns the existing inner map. insert_or_assign then adds the
-    // snapshot at `now`, or updates it if a snapshot already exists at that time.
-    backups[fileName].insert_or_assign(now, Backup(content));
+    // otherwise returns the existing inner map. Then: if there is no snapshot at
+    // `now` yet, insert one; if there already is, update its value in place.
+    auto& history = backups[fileName];
+    auto snapshot = history.find(now);
+    if (snapshot == history.end()) {
+        history.insert(std::make_pair(now, Backup(content)));
+    } else {
+        snapshot->second = Backup(content);
+    }
 
     std::cout << "createBackup: snapshot of \"" << fileName << "\" taken at "
               << now << ".\n";
