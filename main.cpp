@@ -13,17 +13,18 @@ int main() {
 
     BackupSystem backupSystem;
 
-    // 1. Register a live file with the system.
-    backupSystem.addFile(std::make_unique<TextFile>("notes.txt", "text", "first draft"));
+    // 1. Register a live file. Keep the observer pointer so we can edit it.
+    File* notes =
+        backupSystem.addFile(std::make_unique<TextFile>("notes.txt", "text", "first draft"));
 
-    // 2. Take the first backup of it.
+    // 2. Take the first backup -- snapshots the current content into BackupSystem.
     std::time_t firstBackupAt = std::time(nullptr);
     backupSystem.createBackup("notes.txt");
     std::cout << "Created backup #1 for notes.txt\n";
 
-    // 3. Edit the file and take another backup.
-    //    (In a real run these two calls would be a few seconds apart so the
-    //     timestamps differ.)
+    // 3. Edit the file through the File itself, then back it up again.
+    //    createBackup reads the file's current content and records it.
+    notes->updateContent("second draft");
     backupSystem.createBackup("notes.txt");
     std::cout << "Created backup #2 for notes.txt\n\n";
 
@@ -35,7 +36,7 @@ int main() {
     // 5. Restore the file to its first backup.
     std::cout << "Restoring notes.txt to backup #1...\n";
     backupSystem.restore("notes.txt", firstBackupAt);
-    std::cout << "Restore complete.\n";
+    std::cout << "notes.txt content after restore: " << notes->getContent() << "\n";
 
     return 0;
 }

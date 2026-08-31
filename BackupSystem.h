@@ -16,8 +16,9 @@ private:
     std::unordered_map<std::string, std::map<std::time_t, Backup>> backups;
 
 public:
-    // Register a live file with the system (map cannot be populated otherwise).
-    void addFile(std::unique_ptr<File> file);
+    // Register a live file with the system and return an observer pointer to it,
+    // so the caller can keep editing it via updateContent() before each backup.
+    File* addFile(std::unique_ptr<File> file);
 
     // Prints the file name and every backup timestamp it has.
     void listBackups(const std::string& fileName) const;
