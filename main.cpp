@@ -20,12 +20,6 @@ int main() {
     File* todo =
         backupSystem.addFile(std::make_unique<TextFile>("todo.txt", "text", "todo: v1"));
 
-    // Duplicate file name: addFile keeps the existing file and returns it.
-    File* dup =
-        backupSystem.addFile(std::make_unique<TextFile>("notes.txt", "text", "notes: impostor"));
-    std::cout << "duplicate addFile(\"notes.txt\") returned the existing file: "
-              << std::boolalpha << (dup == notes) << "\n\n";
-
     // --- Back up notes.txt across two edits -------------------------------
     std::time_t notesV1At = std::time(nullptr);
     backupSystem.createBackup("notes.txt");

@@ -3,6 +3,15 @@
 #include <iostream>
 #include <utility>
 
+BackupSystem::~BackupSystem() {
+    // Nothing here persists between runs -- the system holds everything in
+    // memory. Clearing the maps runs every unique_ptr<File> destructor (which
+    // deletes the File) and destroys every Backup, so the process exits clean.
+    backups.clear();
+    files.clear();
+    std::cout << "BackupSystem: released all files and backups on exit.\n";
+}
+
 File* BackupSystem::addFile(std::unique_ptr<File> file) {
     if (!file) {
         return nullptr;

@@ -16,6 +16,9 @@ private:
     std::unordered_map<std::string, std::map<std::time_t, Backup>> backups;
 
 public:
+    // Releases every owned File and Backup when the system goes out of scope.
+    ~BackupSystem();
+
     // Register a live file with the system and return an observer pointer to it,
     // so the caller can keep editing it via updateContent() before each backup.
     File* addFile(std::unique_ptr<File> file);
