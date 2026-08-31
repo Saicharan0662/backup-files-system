@@ -26,5 +26,10 @@ public:
     // Prints the file name and every backup timestamp it has.
     void listBackups(const std::string& fileName) const;
     void restore(const std::string& fileName, std::time_t timestamp);
+
+    // Snapshot the file's current content. The first form stamps it with the
+    // current time; the second takes an explicit timestamp (used by tests and
+    // for importing historical snapshots deterministically).
     void createBackup(const std::string& fileName);
+    void createBackup(const std::string& fileName, std::time_t timestamp);
 };

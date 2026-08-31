@@ -4,6 +4,7 @@
 a.out
 main
 backup-system
+run-tests
 build/
 
 # Editor/OS

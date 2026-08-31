@@ -35,28 +35,31 @@ File* BackupSystem::addFile(std::unique_ptr<File> file) {
 }
 
 void BackupSystem::createBackup(const std::string& fileName) {
+    createBackup(fileName, std::time(nullptr));
+}
+
+void BackupSystem::createBackup(const std::string& fileName, std::time_t timestamp) {
     auto fileIt = files.find(fileName);
     if (fileIt == files.end()) {
         std::cout << "createBackup: no file named \"" << fileName << "\".\n";
         return;
     }
 
-    std::time_t now = std::time(nullptr);
     const std::string& content = fileIt->second->getContent();
 
     // `backups[fileName]` creates the per-file history entry if the key is new,
     // otherwise returns the existing inner map. Then: if there is no snapshot at
-    // `now` yet, insert one; if there already is, update its value in place.
+    // `timestamp` yet, insert one; if there already is, update its value in place.
     auto& history = backups[fileName];
-    auto snapshot = history.find(now);
+    auto snapshot = history.find(timestamp);
     if (snapshot == history.end()) {
-        history.insert(std::make_pair(now, Backup(content)));
+        history.insert(std::make_pair(timestamp, Backup(content)));
     } else {
         snapshot->second = Backup(content);
     }
 
     std::cout << "createBackup: snapshot of \"" << fileName << "\" taken at "
-              << now << ".\n";
+              << timestamp << ".\n";
 }
 
 void BackupSystem::listBackups(const std::string& fileName) const {
